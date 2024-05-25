@@ -1,35 +1,48 @@
+# Project metadata
+name: 'DBT_SF_DWH2024'        # The name of the project. It should be in lowercase and contain only characters and underscores.
+version: '1.0.0'              # The version of the project.
 
-# Name your project! Project names should contain only lowercase characters
-# and underscores. A good package name should reflect your organization's
-# name or the intended use of these models
-name: 'DBT_SF_DWH2024'
-version: '1.0.0'
+# Profile configuration
+profile: 'DBT_SF_DWH2024'     # The profile that dbt uses for this project.
 
-# This setting configures which "profile" dbt uses for this project.
-profile: 'DBT_SF_DWH2024'
+# File paths configuration
+model-paths: ["models"]       # Directory where dbt looks for model files.
+analysis-paths: ["analyses"]  # Directory where dbt looks for analysis files.
+test-paths: ["tests"]         # Directory where dbt looks for test files.
+seed-paths: ["seeds"]         # Directory where dbt looks for seed files.
+macro-paths: ["macros"]       # Directory where dbt looks for macro files.
+snapshot-paths: ["snapshots"] # Directory where dbt looks for snapshot files.
 
-# These configurations specify where dbt should look for different types of files.
-# The `model-paths` config, for example, states that models in this project can be
-# found in the "models/" directory. You probably won't need to change these!
-model-paths: ["models"]
-analysis-paths: ["analyses"]
-test-paths: ["tests"]
-seed-paths: ["seeds"]
-macro-paths: ["macros"]
-snapshot-paths: ["snapshots"]
+# Clean targets configuration
+clean-targets:                
+  - "target"                 # Directory to be removed by `dbt clean`.
+  - "dbt_packages"           # Directory to be removed by `dbt clean`.
 
-clean-targets:         # directories to be removed by `dbt clean`
-  - "target"
-  - "dbt_packages"
-
-
-# Configuring models
-# Full documentation: https://docs.getdbt.com/docs/configuring-models
-
-# directory as views. These settings can be overridden in the individual model
-# files using the `{{ config(...) }}` macro.
+# Models configuration
+# This section configures default settings for models in different directories.
 models:
-  DBT_SF_DWH2024:
-    # Config indicated by + and applies to all files under models/example/
-    example:
-      +materialized: view
+  mart:
+    +materialized: view       # Models in the 'mart' directory will be materialized as views.
+    +schema: DM               # Models in the 'mart' directory will be created in the 'DM' schema.
+    +persist_docs:
+      relation: true          # Persist documentation for the relation (model).
+      columns: true           # Persist documentation for the columns.
+
+  operational_data_storage:
+    +materialized: view       # Models in the 'operational_data_storage' directory will be materialized as views.
+    +schema: ODS              # Models in the 'operational_data_storage' directory will be created in the 'ODS' schema.
+    +persist_docs:
+      relation: true          # Persist documentation for the relation (model).
+
+  staging:
+    +materialized: view       # Models in the 'staging' directory will be materialized as views.
+    +schema: STG              # Models in the 'staging' directory will be created in the 'STG' schema.
+    +persist_docs:
+      relation: true          # Persist documentation for the relation (model).
+      columns: true           # Persist documentation for the columns.
+
+  testing:
+    +materialized: view       # Models in the 'testing' directory will be materialized as views.
+    +schema: tmp              # Models in the 'testing' directory will be created in the 'tmp' schema.
+    +persist_docs:
+      relation: true          # Persist documentation for the relation (model).
