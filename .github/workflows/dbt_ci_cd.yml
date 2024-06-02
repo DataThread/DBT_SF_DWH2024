@@ -1,6 +1,6 @@
 name: DBT Workflow
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
   dbt_run:
@@ -15,8 +15,8 @@ jobs:
         with:
           python-version: '3.8'
 
-      - name: Install dbt
-        run: pip install dbt-snowflake
+      - name: Install dependencies
+        run: pip install dbt-snowflake dbt-expectations
 
       - name: Create dbt profile directory
         run: |
@@ -43,8 +43,31 @@ jobs:
           "@
           $profile | Out-File -FilePath "$env:USERPROFILE\.dbt\profiles.yml"
 
-      - name: Run dbt models
+      - name: Set up cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.dbt
+            ./.dbt
+            ./target
+          key: ${{ runner.os }}-dbt-${{ hashFiles('**/dbt_project.yml') }}
+          restore-keys: |
+            ${{ runner.os }}-dbt-
+
+      - name: Run dbt seed
+        run: dbt seed --profiles-dir "$env:USERPROFILE\.dbt"
+
+      - name: Run dbt run
         run: dbt run --profiles-dir "$env:USERPROFILE\.dbt"
 
-      - name: Test dbt models
+      - name: Run dbt test
         run: dbt test --profiles-dir "$env:USERPROFILE\.dbt"
+
+      - name: Generate dbt documentation
+        run: dbt docs generate --profiles-dir "$env:USERPROFILE\.dbt"
+
+      - name: Upload dbt artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: dbt_docs
+          path: target/
