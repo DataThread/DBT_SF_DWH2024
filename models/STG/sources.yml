@@ -5,35 +5,62 @@ sources:
     database: SFDBT_DWH_DB
     schema: RAW
     tables:
+      - name: Customers
+        description: "Raw customer data, initially loaded from operational systems."
+        freshness:
+          warn_after: {count: 1, period: hour}
+          error_after: {count: 2, period: hour}
+      
+      - name: Products
+        description: "Initial product listings, including categories and pricing."
+        freshness:
+          warn_after: {count: 1, period: hour}
+          error_after: {count: 2, period: hour}
 
-    - name: Customers
-      description: "Raw customer data, initially loaded from operational systems."
+      - name: Sales
+        description: "Sales transactions capturing product, customer, and amounts."
+        freshness:
+          warn_after: {count: 1, period: hour}
+          error_after: {count: 2, period: hour}
 
-    - name: Products
-      description: "Initial product listings, including categories and pricing."
+      - name: Stores
+        description: "Store locations and their respective managers."
+        freshness:
+          warn_after: {count: 1, period: hour}
+          error_after: {count: 2, period: hour}
 
-    - name: Sales
-      description: "Sales transactions capturing product, customer, and amounts."
+      - name: Time
+        description: "Dimension table for handling time-related aspects in analysis."
+        freshness:
+          warn_after: {count: 1, period: hour}
+          error_after: {count: 2, period: hour}
 
-    - name: Stores
-      description: "Store locations and their respective managers."
+      - name: Employee
+        description: "Information about employees across different departments."
+        freshness:
+          warn_after: {count: 1, period: hour}
+          error_after: {count: 2, period: hour}
 
-    - name: Time
-      description: "Dimension table for handling time-related aspects in analysis."
+      - name: Employee_Sales
+        description: "Linking table for employees and sales to track sales performance."
+        freshness:
+          warn_after: {count: 1, period: hour}
+          error_after: {count: 2, period: hour}
 
-    - name: Employee
-      description: "Information about employees across different departments."
+      - name: Promotions
+        description: "Marketing promotions with start and end dates."
+        freshness:
+          warn_after: {count: 1, period: hour}
+          error_after: {count: 2, period: hour}
 
-    - name: Employee_Sales
-      description: "Linking table for employees and sales to track sales performance."
+      - name: Sales_Promotions
+        description: "Mapping table for sales and the promotions applied to them."
+        freshness:
+          warn_after: {count: 1, period: hour}
+          error_after: {count: 2, period: hour}
 
-    - name: Promotions
-      description: "Marketing promotions with start and end dates."
-
-    - name: Sales_Promotions
-      description: "Mapping table for sales and the promotions applied to them."
-
-    - name: Inventory_Snapshot
-      description: "Snapshot data for inventory available at various store locations."
-
-
+      - name: Inventory_Snapshot
+        description: "Snapshot data for inventory available at various store locations."
+        freshness:
+          warn_after: {count: 1, period: hour}
+          error_after: {count: 2, period: hour}

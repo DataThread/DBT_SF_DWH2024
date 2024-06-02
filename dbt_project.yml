@@ -40,9 +40,20 @@ models:
     +persist_docs:
       relation: true          # Persist documentation for the relation (model).
       columns: true           # Persist documentation for the columns.
+    pre-hook: 
+      - "CALL DEV.LOGGING_START('{{ target.schema }}', '{{ this.name }}')"
+    post-hook: 
+      - "CALL DEV.LOGGING_END('{{ target.schema }}', '{{ this.name }}')"
 
   testing:
     +materialized: view       # Models in the 'testing' directory will be materialized as views.
     +schema: tmp              # Models in the 'testing' directory will be created in the 'tmp' schema.
     +persist_docs:
       relation: true          # Persist documentation for the relation (model).
+
+# Hooks configuration
+on-run-start:
+  - "CALL DEV.PREPARE_ENVIRONMENT()"
+  
+on-run-end:
+  - "CALL DEV.CLEANUP_ENVIRONMENT()"
