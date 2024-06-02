@@ -26,7 +26,7 @@ jobs:
       - name: Configure dbt profile
         run: |
           $profile = @"
-          SF_DBT_DWH_09:
+          DBT_SF_DWH2024:
             outputs:
               dev:
                 type: snowflake
